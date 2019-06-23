@@ -27,31 +27,33 @@ function doTask () {
       res.on('end', function () {
         let buf = chunks.toString();
         let obj = JSON.parse(buf);
-  
-        let status = obj.data.air_part.vanancy.status;
-  
-        // 当前可预订时，发送邮件
-        if (status === '可预订') {
-          count ++;
-  
-          console.log(status);
-          console.log(count);
-  
-          send(); // 发送邮件
-  
-          if (count > 5 && count < 10) {
-            rule.minute = [0, 5, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+
+        if (obj.code === 200) {
+          let status = obj.data.air_part.vanancy.status;
+
+          // 当前可预订时，发送邮件
+          if (status === '可预订') {
+            count ++;
+    
+            console.log(status);
+            console.log(count);
+    
+            send(); // 发送邮件
+    
+            if (count > 5 && count < 10) {
+              rule.minute = [0, 5, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+            }
+    
+            if (count >= 10 && count < 15) {
+              rule.minute = [0, 15 , 30, 45];
+            }
+    
+            if (count >= 15) {
+              rule.minute = 12;
+            }
+          } else { // 可约看
+            console.log('--------- 可约看 ---------');
           }
-  
-          if (count >= 10 && count < 15) {
-            rule.minute = [0, 15 , 30, 45];
-          }
-  
-          if (count >= 15) {
-            rule.minute = 12;
-          }
-        } else { // 可约看
-          console.log('--------- 可约看 ---------');
         }
       })
     })
