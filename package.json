@@ -4,7 +4,8 @@
   "description": "当满足条件是发送邮件",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
