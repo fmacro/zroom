@@ -1,15 +1,16 @@
 const nodemailer  = require("nodemailer");
+const config = require("./config");
 
 // 参数：发件人，收件人，主题，正文（支持html格式）
-function handleSend (from, aliasName, tos, subject, body) {
+function handleSend (aliasName, tos, subject, body) {
   const smtpTransport = nodemailer.createTransport({
     host: 'smtp.163.com',
     secureConnection: true, // use SSL
     secure: true,
     port: 465,
     auth: {
-      user: from,
-      pass: '',
+      user: config.user,
+      pass: config.pass
     }
   })
 
@@ -30,7 +31,6 @@ function handleSend (from, aliasName, tos, subject, body) {
 
 function send() {
   handleSend(
-    'ysy_nice@163.com',
     '自如房子可以预约了！',
     "582718643@qq.com",
     '赶紧去APP预约吧！',
