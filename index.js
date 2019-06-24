@@ -1,6 +1,7 @@
 const http = require('http');
 const schedule = require('node-schedule');
 const send = require('./send');
+const logger = require('./log4js_config');
 
 let count = 0;
 let rule = new schedule.RecurrenceRule();
@@ -31,6 +32,8 @@ function doTask () {
         if (obj.code === 200) {
           let status = obj.data.air_part.vanancy.status;
 
+          logger.info(status);
+
           // 当前可预订时，发送邮件
           if (status === '可预订') {
             count ++;
@@ -54,6 +57,8 @@ function doTask () {
           } else { // 可约看
             console.log('--------- 可约看 ---------');
           }
+        } else {
+          logger.error(obj);
         }
       })
     })
