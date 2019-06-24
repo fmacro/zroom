@@ -32,14 +32,11 @@ function doTask () {
         if (obj.code === 200) {
           let status = obj.data.air_part.vanancy.status;
 
-          logger.info(status);
+          logger.info(`code: ${obj.code}; status: ${status}; count: ${count}; rule: ${JSON.stringify(rule)};`);
 
           // 当前可预订时，发送邮件
           if (status === '可预订') {
             count ++;
-    
-            console.log(status);
-            console.log(count);
     
             send(); // 发送邮件
     
@@ -55,10 +52,10 @@ function doTask () {
               rule.minute = 12;
             }
           } else { // 可约看
-            console.log('--------- 可约看 ---------');
+            
           }
         } else {
-          logger.error(obj);
+          logger.error(`code: ${obj.code}; count: ${count}; rule: ${JSON.stringify(rule)};`);
         }
       })
     })

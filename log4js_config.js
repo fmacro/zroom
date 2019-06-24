@@ -29,6 +29,6 @@ const config = {
 
 log4js.configure(config);
 
-const logger = log4js.getLogger('things');
+const logger = log4js.getLogger('自如');
 
 module.exports = logger;
