@@ -4,7 +4,7 @@ const config = {
   appenders: {
     file: {
       type: 'file',
-      filename: './log/zroom.log',
+      filename: `./log/${+new Date()}-zroom.log`,
       maxLogSize: 10 * 1024 * 1024, // = 10Mb
       backups: 5, // keep five backup files
       compress: true, // compress the backups
