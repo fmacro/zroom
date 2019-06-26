@@ -35,7 +35,9 @@ function doTask () {
           logger.info(`code: ${obj.code}; status: ${status}; count: ${count}; rule: ${JSON.stringify(rule)};`);
 
           // 当前可预订时，发送邮件
-          if (status === '可预订') {
+          if (status === '可约看') {
+
+          } else {
             count ++;
     
             send(); // 发送邮件
@@ -51,8 +53,6 @@ function doTask () {
             if (count >= 15) {
               rule.minute = 12;
             }
-          } else { // 可约看
-            
           }
         } else {
           logger.error(`code: ${obj.code}; count: ${count}; rule: ${JSON.stringify(rule)};`);
