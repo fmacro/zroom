@@ -12,9 +12,9 @@ function checkDatetime () {
 
   let hours = date.getHours();
 
-  if (hours > 6) {
+  // if (hours > 6) {
     doTask();
-  }
+  // }
 }
 function doTask () {
   schedule.scheduleJob(rule, function(){
