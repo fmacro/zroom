@@ -5,7 +5,7 @@ const logger = require('./log4js_config');
 
 let count = 0;
 let rule = new schedule.RecurrenceRule();
-rule.second = 36;
+rule.minute = [0, 5, 15, 20, 25, 30, 35, 40, 45, 50, 55];
 
 function checkDatetime () {
   let date = new Date();
@@ -43,11 +43,11 @@ function doTask () {
             send(); // 发送邮件
     
             if (count > 5 && count < 10) {
-              rule.minute = [0, 5, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+              rule.minute = [0, 10, 20, 30, 40, 50];
             }
     
             if (count >= 10 && count < 15) {
-              rule.minute = [0, 15 , 30, 45];
+              rule.minute = [0, 30];
             }
     
             if (count >= 15) {
