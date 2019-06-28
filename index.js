@@ -5,57 +5,65 @@ const logger = require('./log4js_config');
 
 let count = 0;
 let rule = new schedule.RecurrenceRule();
-rule.minute = [0, 5, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+// rule.minute = [0, 5, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+rule.second = 36;
 
-function checkDatetime () {
+let checkDatetime = () => {
   let date = new Date();
 
   let hours = date.getHours();
 
-  // if (hours > 6) {
+  if (hours > 6 || hours < 1) {
     doTask();
-  // }
+  }
 }
-function doTask () {
-  schedule.scheduleJob(rule, function(){
+
+let doTask = () => {
+  schedule.scheduleJob(rule, () => {
     let chunks = [];
     let url = 'http://sh.ziroom.com/detail/info?id=62318945&house_id=60365491';
   
-    http.get(url, function (res) {
-      res.on('data', function (chunk) {
-        chunks.push(chunk);
+    http.get(url, (res) => {
+      res.on('data', (chunk) => {
+        if (chunk) {
+          chunks.push(chunk);
+        } else {
+          logger.error('请求错误');
+          return;
+        }
       })
-      res.on('end', function () {
-        let buf = chunks.toString();
-        let obj = JSON.parse(buf);
+      res.on('end', () => {
+        let str = chunks.toString();
 
-        if (obj.code === 200) {
-          let status = obj.data.air_part.vanancy.status;
+        if (chunks && str) {
+          if (str.indexOf('success') > -1) {
+            if (str.indexOf('可约看') > -1) { // 可约看
 
-          logger.info(`code: ${obj.code}; status: ${status}; count: ${count}; rule: ${JSON.stringify(rule)};`);
+              logger.info('当前 可约看');
 
-          // 当前可预订时，发送邮件
-          if (status === '可约看') {
+            } else { // 非可约看
 
+              logger.info('当前 可预定');
+
+              count ++;
+              send(); // 发送邮件
+              if (count > 5 && count < 10) {
+                rule.minute = [0, 10, 20, 30, 40, 50];
+              }
+      
+              if (count >= 10 && count < 15) {
+                rule.minute = [0, 30];
+              }
+      
+              if (count >= 15) {
+                rule.minute = 12;
+              }
+            }
           } else {
-            count ++;
-    
-            send(); // 发送邮件
-    
-            if (count > 5 && count < 10) {
-              rule.minute = [0, 10, 20, 30, 40, 50];
-            }
-    
-            if (count >= 10 && count < 15) {
-              rule.minute = [0, 30];
-            }
-    
-            if (count >= 15) {
-              rule.minute = 12;
-            }
+            logger.error('请求不到正确的数据');
           }
         } else {
-          logger.error(`code: ${obj.code}; count: ${count}; rule: ${JSON.stringify(rule)};`);
+          logger.error('数据错误');
         }
       })
     })
